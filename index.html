@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My AI Studio</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: white;
+    }
+    header {
+      padding: 20px;
+      border-bottom: 1px solid #293149;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    header span { color: #8b7cff; }
+    main {
+      max-width: 800px;
+      margin: 45px auto;
+      padding: 20px;
+    }
+    h1 { font-size: 34px; }
+    p { color: #b6bfd3; line-height: 1.6; }
+    textarea {
+      width: 100%;
+      min-height: 130px;
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid #394461;
+      background: #151d31;
+      color: white;
+      font-size: 16px;
+    }
+    button {
+      margin: 12px 0;
+      padding: 13px 20px;
+      border: 0;
+      border-radius: 9px;
+      background: #7967ff;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .panel {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid #293149;
+      border-radius: 12px;
+      background: #11182a;
+    }
+    #output {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      color: #c7d2fe;
+    }
+    footer {
+      padding: 25px;
+      text-align: center;
+      color: #8993aa;
+    }
+  </style>
+</head>
+<body>
+  <header>My <span>AI Studio</span></header>
+  <main>
+    <h1>Build your ideas.</h1>
+    <p>Turn your ideas into website code. Write your idea below to get started.</p>
+
+    <textarea id="idea" placeholder="Describe the website you want to build..."></textarea>
+    <br>
+    <button onclick="generate()">Generate starter code</button>
+
+    <section class="panel">
+      <h3>Your code</h3>
+      <div id="output">Your generated code will appear here.</div>
+      <button onclick="downloadCode()">Download HTML</button>
+    </section>
+
+    <section class="panel">
+      <h3>Live preview</h3>
+      <iframe id="preview" title="Website preview"
+        style="width:100%;height:250px;background:white;border:0;border-radius:8px">
+      </iframe>
+    </section>
+  </main>
+
+  <footer>My AI Studio · Built for creators</footer>
+
+  <script>
+    let currentCode = "";
+
+    function generate() {
+      const idea = document.getElementById("idea").value.trim();
+      if (!idea) {
+        alert("Please describe your website first.");
+        return;
+      }
+
+      const safeIdea = idea.replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;",
+        '"': "&quot;", "'": "&#39;"
+      })[char]);
+
+      currentCode = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Website</title>
+<style>
+body{font-family:Arial,sans-serif;margin:0;padding:40px;
+background:#f4f5ff;color:#182039;text-align:center}
+h1{color:#6554e8}
+.card{max-width:600px;margin:30px auto;padding:25px;
+background:white;border-radius:16px;box-shadow:0 4px 20px #0001}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>${safeIdea}</h1>
+<p>Welcome to my new website!</p>
+</div>
+</body>
+</html>`;
+
+      document.getElementById("output").textContent = currentCode;
+      document.getElementById("preview").srcdoc = currentCode;
+    }
+
+    function downloadCode() {
+      if (!currentCode) {
+        alert("Generate your code first.");
+        return;
+      }
+      const file = new Blob([currentCode], {type:"text/html"});
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(file);
+      link.download = "my-website.html";
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+  </script>
+</body>
+</html>
