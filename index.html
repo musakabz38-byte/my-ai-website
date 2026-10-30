@@ -1,5 +1,36 @@
 
 <!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MY AI - By Musa</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui;background:#0b1020;color:#fff;height:100vh;display:flex;flex-direction:column}
+header{padding:16px;text-align:center;background:#151a2d;border-bottom:1px solid #293149}
+#chat{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:85%;padding:10px 14px;border-radius:16px;line-height:1.4}
+.user{align-self:flex-end;background:#2563eb}
+.ai{align-self:flex-start;background:#1e233a}
+#box{display:flex;padding:10px;background:#151a2d;gap:8px}
+#input{flex:1;padding:12px;border-radius:20px;border:1px solid #333;background:#0b1020;color:#fff;font-size:16px}
+#send{padding:12px 18px;border-radius:20px;border:none;background:#2563eb;color:#fff;font-weight:700}
+</style>
+</head>
+<body>
+<header><h1>🤖 MY AI Studio</h1><p>Built by Musa Kabz</p></header>
+<div id="chat"><div class="msg ai">Hello Musa! I'm your AI assistant. Ask me anything!</div></div>
+<div id="box"><input id="input" placeholder="Ask me anything..."><button id="send">Send</button></div>
+<script>
+const WORKER_URL="https://my-ai-studio.musakabz38.workers.dev";
+const chat=document.getElementById('chat'),inp=document.getElementById('input'),btn=document.getElementById('send');
+function add(t,c){let d=document.createElement('div');d.className='msg '+c;d.textContent=t;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
+async function send(){let txt=inp.value.trim();if(!txt)return;add(txt,'user');inp.value='';btn.disabled=true;try{let r=await fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:txt})});let data=await r.json();add(data.reply||data.response||JSON.stringify(data),'ai')}catch(e){add('Error: '+e.message,'ai')}btn.disabled=false;inp.focus()}
+btn.onclick=send;inp.onkeydown=e=>{if(e.key==='Enter')send()}
+</script>
+</body>
+</html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
